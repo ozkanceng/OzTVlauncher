@@ -17,6 +17,7 @@ OZLauncher is a free, independent and privacy-first home launcher for Android TV
 
 - Android TV and Google TV: Android 8.0 / API 26 or newer.
 - Fire TV: the APK can be sideloaded, but some Fire OS releases prevent third-party HOME selection. See [Fire TV notes](docs/FIRE_TV.md).
+- Google Cast / YouTube Casting: on Android TV 14+, see [Casting and background service notes](docs/CASTING.md).
 
 ## Install
 

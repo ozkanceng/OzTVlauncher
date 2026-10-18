@@ -2,6 +2,13 @@
 
 All notable changes follow Keep a Changelog and Semantic Versioning.
 
+## [Unreleased]
+
+### Added
+
+- Documentation for Google Cast and YouTube background service behavior on Android TV 14 (`docs/CASTING.md`).
+- Helper script `scripts/fix-android-tv-cast.sh` to prevent Android 14's app freezer from halting the Cast receiver.
+
 ## [1.0.2] — 2026-08-27
 
 ### Added
