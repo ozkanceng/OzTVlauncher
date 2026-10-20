@@ -26,7 +26,7 @@ jobs:
         run: ./gradlew --no-daemon testDebugUnitTest lintDebug assembleRelease
       - name: Verify privacy and size
         run: ./scripts/verify-release.sh app/build/outputs/apk/release/app-release-unsigned.apk
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: unsigned-release
           path: app/build/outputs/apk/release/app-release-unsigned.apk
