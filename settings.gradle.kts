@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "OZLauncher"
+rootProject.name = "OzTV"
 include(":app")

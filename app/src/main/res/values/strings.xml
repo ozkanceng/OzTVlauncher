@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">OZLauncher</string>
+    <string name="app_name">OzTV</string>
     <string name="home_favorites">Favorites</string>
     <string name="all_apps">All apps</string>
     <string name="search_apps">Search apps</string>
-    <string name="settings">OZLauncher settings</string>
+    <string name="settings">OzTV settings</string>
     <string name="system_settings">System settings</string>
     <string name="theme">Color theme</string>
     <string name="columns">Grid columns</string>
@@ -16,7 +16,7 @@
     <string name="backup">Back up settings</string>
     <string name="restore">Restore settings</string>
     <string name="accessibility">Accessibility</string>
-    <string name="about">About OZLauncher</string>
+    <string name="about">About OzTV</string>
     <string name="add_favorite">Add to favorites</string>
     <string name="remove_favorite">Remove from favorites</string>
     <string name="move_earlier">Move earlier</string>
@@ -35,7 +35,7 @@
     <string name="backup_saved">Backup saved</string>
     <string name="backup_failed">Could not save backup</string>
     <string name="restore_done">Settings restored</string>
-    <string name="restore_failed">Invalid or damaged OZLauncher backup</string>
+    <string name="restore_failed">Invalid or damaged OzTV backup</string>
     <string name="no_apps">No matching apps</string>
     <string name="hidden_empty">No hidden apps</string>
     <string name="choose_app">Choose an app</string>
@@ -61,7 +61,7 @@
     <string name="license_summary">Free and open source under Apache License 2.0.</string>
     <string name="cd_launcher_grid">Application grid</string>
     <string name="cd_clock">Current time</string>
-    <string name="cd_open_settings">Open OZLauncher settings</string>
+    <string name="cd_open_settings">Open OzTV settings</string>
     <string name="cd_open_search">Search installed applications</string>
     <string name="palette_navy">Navy + cyan</string>
     <string name="palette_lime">Graphite + lime</string>

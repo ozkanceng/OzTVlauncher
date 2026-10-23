@@ -41,8 +41,7 @@ public final class Ui {
     }
 
     /**
-     * A cinematic TV card plate with hyper-prominent white glow outline on focus,
-     * matching modern Android TV / Google TV reference interfaces.
+     * A cinematic TV card plate background matching modern Android TV reference interfaces.
      */
     public static Drawable tvIconPlate(Context context, ThemePalette palette, boolean focused) {
         int top = focused ? blend(palette.surface, Color.WHITE, 0.22f)
@@ -50,46 +49,18 @@ public final class Ui {
         int bottom = focused ? blend(palette.surface, palette.background, 0.15f)
                 : blend(palette.surface, palette.background, 0.35f);
 
-        if (focused) {
-            // Multilayer glowing focus frame:
-            // Layer 0: Outer soft halo glow
-            GradientDrawable halo = new GradientDrawable(
-                    GradientDrawable.Orientation.TOP_BOTTOM,
-                    new int[] { 0x55FFFFFF, 0x33FFFFFF });
-            halo.setCornerRadius(dp(context, 20));
-            halo.setStroke(dp(context, 4), 0x66FFFFFF);
+        GradientDrawable base = new GradientDrawable(
+                GradientDrawable.Orientation.TOP_BOTTOM, new int[] { top, bottom });
+        base.setCornerRadius(dp(context, 18));
 
-            // Layer 1: Base high-contrast card background with 3dp bright solid white border
-            GradientDrawable base = new GradientDrawable(
-                    GradientDrawable.Orientation.TOP_BOTTOM, new int[] { top, bottom });
-            base.setCornerRadius(dp(context, 18));
-            base.setStroke(dp(context, 3), 0xFFFFFFFF);
+        GradientDrawable sheen = new GradientDrawable(
+                GradientDrawable.Orientation.TOP_BOTTOM,
+                new int[] { focused ? 0x2EFFFFFF : 0x12FFFFFF, 0x00FFFFFF });
+        sheen.setCornerRadius(dp(context, 18));
 
-            // Layer 2: Subtle top-light gradient sheen
-            GradientDrawable sheen = new GradientDrawable(
-                    GradientDrawable.Orientation.TOP_BOTTOM,
-                    new int[] { 0x33FFFFFF, 0x00FFFFFF });
-            sheen.setCornerRadius(dp(context, 18));
-
-            LayerDrawable layers = new LayerDrawable(new Drawable[] { halo, base, sheen });
-            layers.setLayerInset(1, dp(context, 2), dp(context, 2), dp(context, 2), dp(context, 2));
-            layers.setLayerInset(2, dp(context, 4), dp(context, 4), dp(context, 4), dp(context, 30));
-            return layers;
-        } else {
-            GradientDrawable base = new GradientDrawable(
-                    GradientDrawable.Orientation.TOP_BOTTOM, new int[] { top, bottom });
-            base.setCornerRadius(dp(context, 18));
-            base.setStroke(dp(context, 1), 0x22FFFFFF);
-
-            GradientDrawable sheen = new GradientDrawable(
-                    GradientDrawable.Orientation.TOP_BOTTOM,
-                    new int[] { 0x12FFFFFF, 0x00FFFFFF });
-            sheen.setCornerRadius(dp(context, 18));
-
-            LayerDrawable layers = new LayerDrawable(new Drawable[] { base, sheen });
-            layers.setLayerInset(1, dp(context, 2), dp(context, 2), dp(context, 2), dp(context, 24));
-            return layers;
-        }
+        LayerDrawable layers = new LayerDrawable(new Drawable[] { base, sheen });
+        layers.setLayerInset(1, dp(context, 2), dp(context, 2), dp(context, 2), dp(context, 24));
+        return layers;
     }
 
     private static int blend(int from, int to, float amount) {

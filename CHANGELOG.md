@@ -4,6 +4,16 @@ All notable changes follow Keep a Changelog and Semantic Versioning.
 
 ## [Unreleased]
 
+## [1.1.1] — 2026-10-23
+
+### Changed
+
+- Renamed application and launcher from OZLauncher to **OzTV** across all languages, settings, backup filenames, header bar, and AirPlay service discovery.
+- Added top header brand title **"OzTV"** with modern bold typography and status divider.
+- Re-architected card container with `CardPlateView` featuring hardware-accelerated rounded clipping (`clipPath`) to ensure strict border radius on all Android TV hardware.
+- Moved border stroke rendering directly on top of cards so that inner artwork cannot obscure the focus frame.
+- Refined inner icon sizing and margins: TV banners inset by 7%, mobile icons scaled to 56%, and custom brand cards (YouTube, Netflix, Spotify, Downloader, Apple TV, Yansıtma) centered with generous padding to prevent edge collision.
+
 ## [1.1.0] — 2026-10-23
 
 ### Added

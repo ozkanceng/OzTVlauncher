@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">OZLauncher</string>
+    <string name="app_name">OzTV</string>
     <string name="home_favorites">Favoriler</string><string name="all_apps">Tüm uygulamalar</string><string name="search_apps">Uygulama ara</string>
-    <string name="settings">OZLauncher ayarları</string><string name="system_settings">Sistem ayarları</string><string name="theme">Renk teması</string>
+    <string name="settings">OzTV ayarları</string><string name="system_settings">Sistem ayarları</string><string name="theme">Renk teması</string>
     <string name="columns">Izgara sütunları</string><string name="corners">Kutucuk köşeleri</string><string name="clock_style">Saat biçimi</string>
     <string name="wallpaper">Duvar kâğıdı</string><string name="clear_wallpaper">Düz arka plan kullan</string><string name="button_shortcuts">Kumanda kısayolları</string>
-    <string name="backup">Ayarları yedekle</string><string name="restore">Ayarları geri yükle</string><string name="accessibility">Erişilebilirlik</string><string name="about">OZLauncher hakkında</string>
+    <string name="backup">Ayarları yedekle</string><string name="restore">Ayarları geri yükle</string><string name="accessibility">Erişilebilirlik</string><string name="about">OzTV hakkında</string>
     <string name="add_favorite">Favorilere ekle</string><string name="remove_favorite">Favorilerden çıkar</string><string name="move_earlier">Öne taşı</string><string name="move_later">Arkaya taşı</string>
     <string name="hide_app">Uygulamayı gizle</string><string name="manage_hidden">Gizli uygulamaları yönet</string><string name="app_info">Uygulama bilgisi</string><string name="uninstall">Kaldır</string>
     <string name="custom_icon">Özel ikon seç</string><string name="reset_icon">Özel ikonu sıfırla</string><string name="full_clock">Tarih ve saat</string><string name="time_only">Yalnız saat</string><string name="clock_off">Kapalı</string>
     <string name="high_contrast">Yüksek kontrast</string><string name="reduced_motion">Hareketi azalt</string><string name="backup_saved">Yedek kaydedildi</string><string name="backup_failed">Yedek kaydedilemedi</string>
-    <string name="restore_done">Ayarlar geri yüklendi</string><string name="restore_failed">Geçersiz veya bozuk OZLauncher yedeği</string><string name="no_apps">Eşleşen uygulama yok</string><string name="hidden_empty">Gizli uygulama yok</string>
+    <string name="restore_done">Ayarlar geri yüklendi</string><string name="restore_failed">Geçersiz veya bozuk OzTV yedeği</string><string name="no_apps">Eşleşen uygulama yok</string><string name="hidden_empty">Gizli uygulama yok</string>
     <string name="choose_app">Bir uygulama seçin</string><string name="shortcut_red">Kırmızı tuş</string><string name="shortcut_green">Yeşil tuş</string><string name="shortcut_yellow">Sarı tuş</string><string name="shortcut_blue">Mavi tuş</string><string name="shortcut_menu">Menü tuşu</string><string name="shortcut_subtitle">Altyazı tuşu</string><string name="not_assigned">Atanmamış</string>
     <string name="cannot_open">Bu öğe açılamıyor</string><string name="open_drawer_hint">Tüm uygulamalar için Aşağı tuşuna basın</string><string name="version_label">Sürüm %1$s</string>
     <string name="privacy_summary">Reklam, izleme ve ağ izni yoktur.</string><string name="license_summary">Apache License 2.0 altında özgür ve açık kaynaktır.</string>
-    <string name="cd_launcher_grid">Uygulama ızgarası</string><string name="cd_clock">Geçerli saat</string><string name="cd_open_settings">OZLauncher ayarlarını aç</string><string name="cd_open_search">Yüklü uygulamalarda ara</string>
+    <string name="cd_launcher_grid">Uygulama ızgarası</string><string name="cd_clock">Geçerli saat</string><string name="cd_open_settings">OzTV ayarlarını aç</string><string name="cd_open_search">Yüklü uygulamalarda ara</string>
     <string name="palette_navy">Lacivert + camgöbeği</string><string name="palette_lime">Grafit + lime</string><string name="palette_amber">Sinema + amber</string><string name="palette_violet">Kömür + mor</string><string name="palette_mint">Orman + mint</string><string name="palette_mono">Siyah + beyaz</string>
     <string name="choose_wallpaper">Sabit duvar kâğıdı seç</string><string name="unhide_app">%1$s uygulamasını göster</string><string name="customization">Görünüm</string><string name="source_code">Kaynak: github.com/ozkanceng/ozlauncher</string>
     <string name="drawer_hint">Geri veya Yukarı ana ekrana döner</string><string name="favorite_empty">Bir uygulamaya uzun basarak favori ekleyin</string><string name="shortcut_saved">Kısayol kaydedildi</string>

@@ -205,9 +205,28 @@ public final class LauncherActivity extends Activity {
         topLp.setMargins(Ui.dp(this, 42), Ui.dp(this, 28), Ui.dp(this, 42), 0);
         root.addView(top, topLp);
 
+        TextView brandView = new TextView(this);
+        brandView.setText("OzTV");
+        brandView.setTextColor(Color.WHITE);
+        brandView.setTextSize(26);
+        brandView.setTypeface(android.graphics.Typeface.create("sans-serif-black",
+                android.graphics.Typeface.BOLD));
+        brandView.setGravity(Gravity.CENTER_VERTICAL);
+        brandView.setPadding(0, 0, Ui.dp(this, 16), 0);
+        top.addView(brandView, new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        View brandDivider = new View(this);
+        brandDivider.setBackgroundColor(0x38FFFFFF);
+        LinearLayout.LayoutParams divLp = new LinearLayout.LayoutParams(
+                Ui.dp(this, 1.5f), Ui.dp(this, 22));
+        divLp.gravity = Gravity.CENTER_VERTICAL;
+        divLp.setMarginEnd(Ui.dp(this, 16));
+        top.addView(brandDivider, divLp);
+
         clockView = new TextView(this);
         clockView.setTextColor(palette.text);
-        clockView.setTextSize(25);
+        clockView.setTextSize(24);
         clockView.setTypeface(android.graphics.Typeface.create("sans-serif-light",
                 android.graphics.Typeface.NORMAL));
         clockView.setGravity(Gravity.CENTER_VERTICAL);
@@ -635,7 +654,7 @@ public final class LauncherActivity extends Activity {
 
     private void createBackup() {
         Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT).setType("application/zip")
-                .addCategory(Intent.CATEGORY_OPENABLE).putExtra(Intent.EXTRA_TITLE, "OZLauncher-settings.ozbackup");
+                .addCategory(Intent.CATEGORY_OPENABLE).putExtra(Intent.EXTRA_TITLE, "OzTV-settings.ozbackup");
         startActivityForResult(intent, CREATE_BACKUP);
     }
 

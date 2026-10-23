@@ -26,7 +26,7 @@ import io.github.ozkanceng.ozlauncher.ui.Ui;
  * Provides live AirPlay receiver for iPhone/iPad/Mac and Google Cast integration for Android/PC.
  */
 public final class MirroringHubActivity extends Activity implements SurfaceHolder.Callback, AirPlayServer.Listener {
-    private static final String TV_NAME = "Özkan TV";
+    private static final String TV_NAME = "OzTV";
 
     private FrameLayout root;
     private LinearLayout guideContainer;

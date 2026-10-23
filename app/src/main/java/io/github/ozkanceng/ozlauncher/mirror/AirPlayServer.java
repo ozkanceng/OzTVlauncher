@@ -47,7 +47,7 @@ public final class AirPlayServer {
     private ServerSocket serverSocket;
     private volatile boolean running;
     private Listener listener;
-    private String deviceName = "Özkan TV";
+    private String deviceName = "OzTV";
 
     public AirPlayServer(Context context) {
         this.context = context.getApplicationContext();
