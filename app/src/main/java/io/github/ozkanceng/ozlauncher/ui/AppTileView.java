@@ -120,7 +120,7 @@ public final class AppTileView extends LinearLayout {
         setPadding(pad, pad, pad, Ui.dp(context, 6));
 
         iconPlate = new CardPlateView(context);
-        addView(iconPlate, new LayoutParams(Ui.dp(context, 154), Ui.dp(context, 90)));
+        addView(iconPlate, new LayoutParams(Ui.dp(context, 140), Ui.dp(context, 79)));
 
         icon = new ImageView(context);
         icon.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -171,6 +171,26 @@ public final class AppTileView extends LinearLayout {
     }
 
     public LaunchItem item() { return item; }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int width = MeasureSpec.getSize(widthMeasureSpec);
+        int availableW = width - getPaddingLeft() - getPaddingRight();
+        if (availableW > 0) {
+            int cardW = availableW;
+            int cardH = Math.max(1, Math.round(cardW * 9f / 16f));
+            ViewGroup.LayoutParams lp = iconPlate.getLayoutParams();
+            if (lp == null) {
+                lp = new LayoutParams(cardW, cardH);
+                iconPlate.setLayoutParams(lp);
+            } else if (lp.width != cardW || lp.height != cardH) {
+                lp.width = cardW;
+                lp.height = cardH;
+                iconPlate.setLayoutParams(lp);
+            }
+        }
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
 
     private void updateFocus(boolean focused) {
         if (palette == null) return;
