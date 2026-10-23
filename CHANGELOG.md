@@ -4,6 +4,23 @@ All notable changes follow Keep a Changelog and Semantic Versioning.
 
 ## [Unreleased]
 
+## [1.1.2] — 2026-10-23
+
+### Added
+
+- Curated ultra-modern, cinematic cards for system and streaming apps:
+  - **Ayarlar / Settings:** Deep obsidian glass card with a glowing, precision silver gear and cyan accent.
+  - **Canlı TV / TV Center:** Sapphire-to-violet broadcast card featuring an ultra-thin modern OLED screen with wireless signal waves.
+  - **Netflix:** Cinema noir black card with ambient spotlight and luminous red Netflix typography.
+  - **Max / HBO Max:** Deep cosmic blue-violet gradient card with bold modern "max" branding.
+  - **YouTube:** Deep obsidian cinema card with signature glossy red play badge and clean white typography.
+  - **tabii, TOD, Exxen, Prime Video, YouTube Kids, Downloader, Apple TV:** Bespoke modern cards tailored to each brand's aesthetic.
+
+### Changed
+
+- Switched card image view scale type to `CENTER_CROP` with hardware `clipPath` to completely eliminate top/bottom letterbox bars.
+- Updated base TV card plate to a neutral, luxury dark obsidian slate surface (`#141926` to `#0B0E17`).
+
 ## [1.1.1] — 2026-10-23
 
 ### Changed

@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.RadialGradient;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
@@ -208,6 +209,13 @@ public final class IconRepository {
         return result;
     }
 
+    private static void applyCardClip(Canvas canvas, int width, int height) {
+        float radius = height * 0.20f;
+        Path clip = new Path();
+        clip.addRoundRect(new RectF(0, 0, width, height), radius, radius, Path.Direction.CW);
+        canvas.clipPath(clip);
+    }
+
     private Bitmap loadApplication(LaunchItem item, int sizePx) {
         try {
             Drawable drawable = null;
@@ -226,28 +234,27 @@ public final class IconRepository {
             int heightPx = Math.max(1, Math.round(sizePx * 0.58f));
             Bitmap out = Bitmap.createBitmap(sizePx, heightPx, Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(out);
+            applyCardClip(canvas, sizePx, heightPx);
 
-            // Clip bitmap with smooth rounded corners matching TV border radius
-            float radius = heightPx * 0.20f;
-            Path clip = new Path();
-            clip.addRoundRect(new RectF(0, 0, sizePx, heightPx), radius, radius, Path.Direction.CW);
-            canvas.clipPath(clip);
-
-            // Draw modern TV card base background
+            // Sleek obsidian / slate glass TV card background
             Paint cardPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             cardPaint.setShader(new LinearGradient(0, 0, sizePx, heightPx,
-                    new int[] { 0xFF1E293B, 0xFF0F172A }, null, Shader.TileMode.CLAMP));
+                    new int[] { 0xFF242C3D, 0xFF141926, 0xFF0C0F17 }, null, Shader.TileMode.CLAMP));
             canvas.drawRect(0, 0, sizePx, heightPx, cardPaint);
 
             if (isBanner) {
-                // Inset banner slightly (7%) so logos/artwork fit cleanly inside rounded borders
-                int padX = Math.round(sizePx * 0.07f);
-                int padY = Math.round(heightPx * 0.07f);
-                drawable.setBounds(padX, padY, sizePx - padX, heightPx - padY);
+                // TV Banners fill the card smoothly with subtle top-to-bottom edge shading
+                drawable.setBounds(0, 0, sizePx, heightPx);
                 drawable.draw(canvas);
             } else {
-                // Proportion mobile icons comfortably inside the TV card (56% height)
-                int iconSize = Math.round(heightPx * 0.56f);
+                // Mobile app icons sit elegantly centered with an ambient glow behind them
+                float cx = sizePx / 2f;
+                float cy = heightPx / 2f;
+                cardPaint.setShader(new RadialGradient(cx, cy, heightPx * 0.40f,
+                        new int[] { 0x3338BDF8, 0x00000000 }, null, Shader.TileMode.CLAMP));
+                canvas.drawCircle(cx, cy, heightPx * 0.40f, cardPaint);
+
+                int iconSize = Math.round(heightPx * 0.58f);
                 int left = (sizePx - iconSize) / 2;
                 int top = (heightPx - iconSize) / 2;
                 drawable.setBounds(left, top, left + iconSize, top + iconSize);
@@ -263,217 +270,518 @@ public final class IconRepository {
         int height = Math.max(1, Math.round(width * 0.58f));
         Bitmap out = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(out);
-
-        float radius = height * 0.20f;
-        Path clip = new Path();
-        clip.addRoundRect(new RectF(0, 0, width, height), radius, radius, Path.Direction.CW);
-        canvas.clipPath(clip);
+        applyCardClip(canvas, width, height);
 
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-        // Vibrant TV Mirroring gradient background
+        // Electric ocean gradient (Royal Blue to Emerald Teal)
         paint.setShader(new LinearGradient(0, 0, width, height,
                 new int[] { 0xFF1D4ED8, 0xFF0284C7, 0xFF0D9488 },
                 null, Shader.TileMode.CLAMP));
         canvas.drawRect(0, 0, width, height, paint);
         paint.setShader(null);
 
-        // TV monitor outline - proportioned so it fits comfortably inside with generous padding
-        paint.setColor(0xF0FFFFFF);
+        // Ambient radial light in screen center
+        float cx = width / 2f;
+        float cy = height * 0.42f;
+        paint.setShader(new RadialGradient(cx, cy, height * 0.45f,
+                new int[] { 0x4467E8F9, 0x1067E8F9, 0x00000000 }, null, Shader.TileMode.CLAMP));
+        canvas.drawCircle(cx, cy, height * 0.45f, paint);
+        paint.setShader(null);
+
+        // Floating modern TV display outline
+        paint.setColor(0xF5FFFFFF);
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(Math.max(2f, height * 0.038f));
-        float tvW = width * 0.34f;
-        float tvH = height * 0.36f;
+        paint.setStrokeWidth(Math.max(2f, height * 0.035f));
+        float tvW = width * 0.36f;
+        float tvH = height * 0.38f;
         float tvLeft = (width - tvW) / 2f;
-        float tvTop = height * 0.16f;
+        float tvTop = height * 0.15f;
         canvas.drawRoundRect(new RectF(tvLeft, tvTop, tvLeft + tvW, tvTop + tvH),
                 height * 0.06f, height * 0.06f, paint);
 
         // Stand
-        float standW = tvW * 0.40f;
+        float standW = tvW * 0.38f;
         float standY = tvTop + tvH;
-        float standBase = standY + height * 0.07f;
-        canvas.drawLine(width / 2f, standY, width / 2f, standBase, paint);
-        canvas.drawLine(width / 2f - standW / 2f, standBase, width / 2f + standW / 2f, standBase, paint);
+        float standBase = standY + height * 0.06f;
+        canvas.drawLine(cx, standY, cx, standBase, paint);
+        canvas.drawLine(cx - standW / 2f, standBase, cx + standW / 2f, standBase, paint);
 
-        // AirPlay / Cast symbol inside
+        // AirPlay / Cast triangle inside screen
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(Color.WHITE);
         Path tri = new Path();
-        float cx = width / 2f;
-        float cy = tvTop + tvH * 0.48f;
         float triS = height * 0.09f;
-        tri.moveTo(cx, cy - triS);
+        tri.moveTo(cx, cy - triS * 0.9f);
         tri.lineTo(cx + triS, cy + triS * 0.75f);
         tri.lineTo(cx - triS, cy + triS * 0.75f);
         tri.close();
         canvas.drawPath(tri, paint);
 
-        // Label
+        // Wireless cast waves arc
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(0xCC67E8F9);
+        paint.setStrokeWidth(Math.max(2f, height * 0.024f));
+        canvas.drawArc(new RectF(cx - tvW * 0.36f, cy - tvH * 0.40f, cx + tvW * 0.36f, cy + tvH * 0.40f),
+                -135, 90, false, paint);
+
+        // Modern glowing badge label "YANSITMA"
+        paint.setStyle(Paint.Style.FILL);
         paint.setTypeface(Typeface.create("sans-serif-medium", Typeface.BOLD));
         paint.setTextAlign(Paint.Align.CENTER);
-        paint.setTextSize(height * 0.14f);
-        paint.setLetterSpacing(0.04f);
+        paint.setTextSize(height * 0.15f);
+        paint.setLetterSpacing(0.08f);
         paint.setColor(0xFFF0FDF4);
-        canvas.drawText("YANSITMA", width / 2f, height * 0.82f, paint);
+        canvas.drawText("YANSITMA", cx, height * 0.85f, paint);
         return out;
     }
 
     private static Bitmap drawBrandCard(LaunchItem item, int width) {
-        if (item == null || item.packageName == null && item.label == null) return null;
+        if (item == null) return null;
         String pkg = (item.packageName == null ? "" : item.packageName).toLowerCase(java.util.Locale.US);
         String label = (item.label == null ? "" : item.label).toLowerCase(java.util.Locale.US);
+        String id = (item.id == null ? "" : item.id).toLowerCase(java.util.Locale.US);
 
         int height = Math.max(1, Math.round(width * 0.58f));
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-        if (pkg.contains("youtube") || label.contains("youtube")) {
-            // YouTube: Pure white card with red play badge and bold text, centered with generous padding
+        // 1. Ayarlar / Settings
+        if (pkg.contains("settings") || id.contains("settings") || label.contains("ayar") || label.contains("setting")) {
             Bitmap out = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(out);
+            applyCardClip(canvas, width, height);
 
-            float radius = height * 0.20f;
-            Path clip = new Path();
-            clip.addRoundRect(new RectF(0, 0, width, height), radius, radius, Path.Direction.CW);
-            canvas.clipPath(clip);
-            canvas.drawColor(0xFFFFFFFF);
+            paint.setShader(new LinearGradient(0, 0, width, height,
+                    new int[] { 0xFF2A3447, 0xFF171E2D, 0xFF0E131D }, null, Shader.TileMode.CLAMP));
+            canvas.drawRect(0, 0, width, height, paint);
+            paint.setShader(null);
 
-            paint.setTextSize(height * 0.24f);
+            float cx = width / 2f;
+            float cy = height * 0.44f;
+            float r = height * 0.22f;
+            paint.setShader(new RadialGradient(cx, cy, r * 1.8f,
+                    new int[] { 0x4438BDF8, 0x1138BDF8, 0x00000000 }, null, Shader.TileMode.CLAMP));
+            canvas.drawCircle(cx, cy, r * 1.8f, paint);
+            paint.setShader(null);
+
+            paint.setColor(0xFFF1F5F9);
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(r * 0.28f);
+            canvas.drawCircle(cx, cy, r * 0.72f, paint);
+
+            paint.setStyle(Paint.Style.FILL);
+            for (int i = 0; i < 8; i++) {
+                double angle = Math.toRadians(i * 45);
+                float cogX = cx + (float) Math.cos(angle) * r;
+                float cogY = cy + (float) Math.sin(angle) * r;
+                float cogW = r * 0.28f;
+                float cogH = r * 0.22f;
+                canvas.save();
+                canvas.rotate(i * 45, cogX, cogY);
+                canvas.drawRoundRect(new RectF(cogX - cogW/2f, cogY - cogH/2f, cogX + cogW/2f, cogY + cogH/2f),
+                        r * 0.06f, r * 0.06f, paint);
+                canvas.restore();
+            }
+
+            paint.setColor(0xFF38BDF8);
+            canvas.drawCircle(cx, cy, r * 0.24f, paint);
+
+            paint.setColor(0xFFF8FAFC);
+            paint.setTypeface(Typeface.create("sans-serif-medium", Typeface.BOLD));
+            paint.setTextSize(height * 0.16f);
+            paint.setTextAlign(Paint.Align.CENTER);
+            paint.setLetterSpacing(0.08f);
+            canvas.drawText("AYARLAR", cx, height * 0.84f, paint);
+            return out;
+        }
+
+        // 2. Canlı TV / TV Center
+        if (pkg.contains("wwtv") || pkg.contains("tvcenter") || pkg.contains("livetv") || id.contains("tvcenter")
+                || label.equals("tv") || label.contains("canlı tv") || label.contains("live tv")) {
+            Bitmap out = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(out);
+            applyCardClip(canvas, width, height);
+
+            paint.setShader(new LinearGradient(0, 0, width, height,
+                    new int[] { 0xFF1E1B4B, 0xFF312E81, 0xFF0F172A }, null, Shader.TileMode.CLAMP));
+            canvas.drawRect(0, 0, width, height, paint);
+            paint.setShader(null);
+
+            float cx = width / 2f;
+            float cy = height * 0.42f;
+            paint.setShader(new RadialGradient(cx, cy, height * 0.40f,
+                    new int[] { 0x55A855F7, 0x15A855F7, 0x00000000 }, null, Shader.TileMode.CLAMP));
+            canvas.drawCircle(cx, cy, height * 0.40f, paint);
+            paint.setShader(null);
+
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(Math.max(2f, height * 0.032f));
+            paint.setColor(0xFFE0E7FF);
+            float screenW = width * 0.38f;
+            float screenH = height * 0.40f;
+            float left = (width - screenW) / 2f;
+            float top = height * 0.16f;
+            canvas.drawRoundRect(new RectF(left, top, left + screenW, top + screenH),
+                    height * 0.06f, height * 0.06f, paint);
+
+            paint.setColor(0xFF38BDF8);
+            paint.setStrokeWidth(Math.max(2f, height * 0.026f));
+            paint.setStyle(Paint.Style.STROKE);
+            canvas.drawArc(new RectF(cx - screenW * 0.28f, cy - screenH * 0.28f, cx + screenW * 0.28f, cy + screenH * 0.28f),
+                    -140, 100, false, paint);
+            paint.setColor(0xFFC084FC);
+            canvas.drawArc(new RectF(cx - screenW * 0.16f, cy - screenH * 0.16f, cx + screenW * 0.16f, cy + screenH * 0.16f),
+                    -140, 100, false, paint);
+
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(Color.WHITE);
+            canvas.drawCircle(cx, cy, height * 0.04f, paint);
+
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setColor(0xFFE0E7FF);
+            paint.setStrokeWidth(Math.max(2f, height * 0.030f));
+            float standY = top + screenH;
+            float standBase = standY + height * 0.06f;
+            canvas.drawLine(cx, standY, cx, standBase, paint);
+            canvas.drawLine(cx - screenW * 0.25f, standBase, cx + screenW * 0.25f, standBase, paint);
+
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(0xFFFFFFFF);
+            paint.setTypeface(Typeface.create("sans-serif-black", Typeface.BOLD));
+            paint.setTextSize(height * 0.16f);
+            paint.setTextAlign(Paint.Align.CENTER);
+            paint.setLetterSpacing(0.06f);
+            canvas.drawText("CANLI TV", cx, height * 0.86f, paint);
+            return out;
+        }
+
+        // 3. Netflix
+        if (pkg.contains("netflix") || label.contains("netflix") || id.contains("netflix")) {
+            Bitmap out = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(out);
+            applyCardClip(canvas, width, height);
+
+            paint.setShader(new LinearGradient(0, 0, width, height,
+                    new int[] { 0xFF141414, 0xFF080808, 0xFF101010 }, null, Shader.TileMode.CLAMP));
+            canvas.drawRect(0, 0, width, height, paint);
+            paint.setShader(null);
+
+            float cx = width / 2f;
+            paint.setShader(new RadialGradient(cx, height * 0.50f, height * 0.55f,
+                    new int[] { 0x55E50914, 0x15E50914, 0x00000000 }, null, Shader.TileMode.CLAMP));
+            canvas.drawCircle(cx, height * 0.50f, height * 0.55f, paint);
+            paint.setShader(null);
+
+            paint.setColor(0xFFE50914);
+            paint.setTypeface(Typeface.create("sans-serif-black", Typeface.BOLD));
+            paint.setTextSize(height * 0.35f);
+            paint.setTextAlign(Paint.Align.CENTER);
+            paint.setLetterSpacing(0.06f);
+            canvas.drawText("NETFLIX", cx, height * 0.62f, paint);
+            return out;
+        }
+
+        // 4. Max / HBO Max
+        if (pkg.contains("wbd.stream") || pkg.contains("hbo") || label.contains("hbo")
+                || label.equals("max") || label.contains("max") || id.contains("max")) {
+            Bitmap out = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(out);
+            applyCardClip(canvas, width, height);
+
+            paint.setShader(new LinearGradient(0, 0, width, height,
+                    new int[] { 0xFF002878, 0xFF001048, 0xFF030514 }, null, Shader.TileMode.CLAMP));
+            canvas.drawRect(0, 0, width, height, paint);
+            paint.setShader(null);
+
+            float cx = width / 2f;
+            paint.setShader(new RadialGradient(cx, height * 0.50f, height * 0.50f,
+                    new int[] { 0x4400A8E1, 0x1000A8E1, 0x00000000 }, null, Shader.TileMode.CLAMP));
+            canvas.drawCircle(cx, height * 0.50f, height * 0.50f, paint);
+            paint.setShader(null);
+
+            paint.setColor(Color.WHITE);
+            paint.setTypeface(Typeface.create("sans-serif-black", Typeface.BOLD));
+            paint.setTextSize(height * 0.44f);
+            paint.setTextAlign(Paint.Align.CENTER);
+            paint.setLetterSpacing(-0.02f);
+            canvas.drawText("max", cx, height * 0.65f, paint);
+            return out;
+        }
+
+        // 5. YouTube
+        if (!pkg.contains("tvkids") && (pkg.contains("youtube") || label.contains("youtube") || id.contains("youtube"))) {
+            Bitmap out = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(out);
+            applyCardClip(canvas, width, height);
+
+            paint.setShader(new LinearGradient(0, 0, width, height,
+                    new int[] { 0xFF1F1F1F, 0xFF121212, 0xFF0A0A0A }, null, Shader.TileMode.CLAMP));
+            canvas.drawRect(0, 0, width, height, paint);
+            paint.setShader(null);
+
+            float cx = width / 2f;
+            paint.setShader(new RadialGradient(cx, height * 0.50f, height * 0.50f,
+                    new int[] { 0x40FF0000, 0x10FF0000, 0x00000000 }, null, Shader.TileMode.CLAMP));
+            canvas.drawCircle(cx, height * 0.50f, height * 0.50f, paint);
+            paint.setShader(null);
+
+            paint.setTextSize(height * 0.26f);
             paint.setTypeface(Typeface.create("sans-serif", Typeface.BOLD));
             float textW = paint.measureText("YouTube");
 
-            float badgeH = height * 0.34f;
+            float badgeH = height * 0.36f;
             float badgeW = badgeH * 1.42f;
-            float gap = width * 0.035f;
+            float gap = width * 0.04f;
             float totalW = badgeW + gap + textW;
             float startX = (width - totalW) / 2f;
             float by = (height - badgeH) / 2f;
 
-            // Red badge
             paint.setColor(0xFFFF0000);
             paint.setStyle(Paint.Style.FILL);
             canvas.drawRoundRect(new RectF(startX, by, startX + badgeW, by + badgeH),
                     badgeH * 0.28f, badgeH * 0.28f, paint);
 
-            // White triangle inside badge
             paint.setColor(Color.WHITE);
             Path tri = new Path();
-            float tSize = badgeH * 0.30f;
-            float tcx = startX + badgeW * 0.52f;
-            float tcy = by + badgeH * 0.5f;
+            float tSize = badgeH * 0.32f;
+            float tcx = startX + badgeW * 0.53f;
+            float tcy = by + badgeH * 0.50f;
             tri.moveTo(tcx + tSize, tcy);
             tri.lineTo(tcx - tSize * 0.6f, tcy - tSize * 0.7f);
             tri.lineTo(tcx - tSize * 0.6f, tcy + tSize * 0.7f);
             tri.close();
             canvas.drawPath(tri, paint);
 
-            // Text "YouTube"
-            paint.setColor(0xFF212121);
+            paint.setColor(Color.WHITE);
             paint.setTextAlign(Paint.Align.LEFT);
-            canvas.drawText("YouTube", startX + badgeW + gap, by + badgeH * 0.72f, paint);
+            canvas.drawText("YouTube", startX + badgeW + gap, by + badgeH * 0.73f, paint);
             return out;
         }
 
-        if (pkg.contains("netflix") || label.contains("netflix")) {
-            // Netflix: Crisp white card with bold red NETFLIX centered with margins
+        // 6. YouTube Kids
+        if (pkg.contains("tvkids") || label.contains("kids")) {
             Bitmap out = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(out);
+            applyCardClip(canvas, width, height);
 
-            float radius = height * 0.20f;
-            Path clip = new Path();
-            clip.addRoundRect(new RectF(0, 0, width, height), radius, radius, Path.Direction.CW);
-            canvas.clipPath(clip);
-            canvas.drawColor(0xFFFFFFFF);
+            paint.setShader(new LinearGradient(0, 0, width, height,
+                    new int[] { 0xFF0284C7, 0xFF0369A1, 0xFF0C4A6E }, null, Shader.TileMode.CLAMP));
+            canvas.drawRect(0, 0, width, height, paint);
+            paint.setShader(null);
 
-            paint.setColor(0xFFE50914);
+            float cx = width / 2f;
+            float cy = height * 0.44f;
+            float badgeH = height * 0.38f;
+            float badgeW = badgeH * 1.35f;
+
+            paint.setColor(0xFFFF0000);
+            paint.setStyle(Paint.Style.FILL);
+            canvas.drawRoundRect(new RectF(cx - badgeW/2f, cy - badgeH/2f, cx + badgeW/2f, cy + badgeH/2f),
+                    badgeH * 0.32f, badgeH * 0.32f, paint);
+
+            paint.setColor(Color.WHITE);
+            Path tri = new Path();
+            float tSize = badgeH * 0.30f;
+            tri.moveTo(cx + tSize * 0.9f, cy);
+            tri.lineTo(cx - tSize * 0.6f, cy - tSize * 0.7f);
+            tri.lineTo(cx - tSize * 0.6f, cy + tSize * 0.7f);
+            tri.close();
+            canvas.drawPath(tri, paint);
+
+            paint.setColor(Color.WHITE);
             paint.setTypeface(Typeface.create("sans-serif-black", Typeface.BOLD));
-            paint.setTextSize(height * 0.30f);
+            paint.setTextSize(height * 0.18f);
             paint.setTextAlign(Paint.Align.CENTER);
             paint.setLetterSpacing(0.04f);
-            canvas.drawText("NETFLIX", width / 2f, height * 0.60f, paint);
+            canvas.drawText("Kids", cx, height * 0.84f, paint);
             return out;
         }
 
-        if (pkg.contains("spotify") || label.contains("spotify")) {
-            // Spotify: Charcoal card with green icon & wordmark centered
+        // 7. Spotify
+        if (pkg.contains("spotify") || label.contains("spotify") || id.contains("spotify")) {
             Bitmap out = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(out);
+            applyCardClip(canvas, width, height);
 
-            float radius = height * 0.20f;
-            Path clip = new Path();
-            clip.addRoundRect(new RectF(0, 0, width, height), radius, radius, Path.Direction.CW);
-            canvas.clipPath(clip);
-            canvas.drawColor(0xFF121212);
+            paint.setShader(new LinearGradient(0, 0, width, height,
+                    new int[] { 0xFF1C1C1C, 0xFF121212, 0xFF080808 }, null, Shader.TileMode.CLAMP));
+            canvas.drawRect(0, 0, width, height, paint);
+            paint.setShader(null);
 
-            paint.setTextSize(height * 0.24f);
+            float cx = width / 2f;
+            paint.setShader(new RadialGradient(cx, height * 0.50f, height * 0.50f,
+                    new int[] { 0x441DB954, 0x101DB954, 0x00000000 }, null, Shader.TileMode.CLAMP));
+            canvas.drawCircle(cx, height * 0.50f, height * 0.50f, paint);
+            paint.setShader(null);
+
+            paint.setTextSize(height * 0.25f);
             paint.setTypeface(Typeface.create("sans-serif", Typeface.BOLD));
             float textW = paint.measureText("Spotify");
 
-            float r = height * 0.20f;
+            float r = height * 0.22f;
             float gap = width * 0.04f;
             float totalW = r * 2f + gap + textW;
             float startX = (width - totalW) / 2f;
-            float cx = startX + r;
-            float cy = height * 0.5f;
+            float circleX = startX + r;
 
-            // Green circle
             paint.setColor(0xFF1DB954);
             paint.setStyle(Paint.Style.FILL);
-            canvas.drawCircle(cx, cy, r, paint);
+            canvas.drawCircle(circleX, height * 0.50f, r, paint);
 
-            // 3 sound arcs
             paint.setColor(0xFF121212);
             paint.setStyle(Paint.Style.STROKE);
             paint.setStrokeCap(Paint.Cap.ROUND);
             paint.setStrokeWidth(r * 0.18f);
-            canvas.drawArc(new RectF(cx - r * 0.65f, cy - r * 0.55f, cx + r * 0.65f, cy + r * 0.45f), -145, 110, false, paint);
+            canvas.drawArc(new RectF(circleX - r * 0.65f, height * 0.50f - r * 0.55f, circleX + r * 0.65f, height * 0.50f + r * 0.45f), -145, 110, false, paint);
             paint.setStrokeWidth(r * 0.16f);
-            canvas.drawArc(new RectF(cx - r * 0.50f, cy - r * 0.30f, cx + r * 0.50f, cy + r * 0.55f), -145, 110, false, paint);
+            canvas.drawArc(new RectF(circleX - r * 0.50f, height * 0.50f - r * 0.30f, circleX + r * 0.50f, height * 0.50f + r * 0.55f), -145, 110, false, paint);
             paint.setStrokeWidth(r * 0.14f);
-            canvas.drawArc(new RectF(cx - r * 0.35f, cy - r * 0.10f, cx + r * 0.35f, cy + r * 0.65f), -145, 110, false, paint);
+            canvas.drawArc(new RectF(circleX - r * 0.35f, height * 0.50f - r * 0.10f, circleX + r * 0.35f, height * 0.50f + r * 0.65f), -145, 110, false, paint);
 
-            // Text "Spotify"
             paint.setStyle(Paint.Style.FILL);
             paint.setColor(Color.WHITE);
             paint.setTextAlign(Paint.Align.LEFT);
-            canvas.drawText("Spotify", cx + r + gap, cy + height * 0.08f, paint);
+            canvas.drawText("Spotify", circleX + r + gap, height * 0.58f, paint);
             return out;
         }
 
-        if (pkg.contains("downloader") || label.contains("downloader")) {
-            // Downloader: Orange card with white 'D' & title centered
+        // 8. tabii
+        if (pkg.contains("tabii") || label.contains("tabii") || id.contains("tabii")) {
             Bitmap out = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(out);
+            applyCardClip(canvas, width, height);
 
-            float radius = height * 0.20f;
-            Path clip = new Path();
-            clip.addRoundRect(new RectF(0, 0, width, height), radius, radius, Path.Direction.CW);
-            canvas.clipPath(clip);
-            canvas.drawColor(0xFFF97316);
+            paint.setShader(new LinearGradient(0, 0, width, height,
+                    new int[] { 0xFF064E3B, 0xFF042F2E, 0xFF021B1A }, null, Shader.TileMode.CLAMP));
+            canvas.drawRect(0, 0, width, height, paint);
+            paint.setShader(null);
+
+            float cx = width / 2f;
+            paint.setShader(new RadialGradient(cx, height * 0.50f, height * 0.50f,
+                    new int[] { 0x4410B981, 0x1010B981, 0x00000000 }, null, Shader.TileMode.CLAMP));
+            canvas.drawCircle(cx, height * 0.50f, height * 0.50f, paint);
+            paint.setShader(null);
+
+            paint.setColor(0xFF34D399);
+            paint.setTypeface(Typeface.create("sans-serif-black", Typeface.BOLD));
+            paint.setTextSize(height * 0.42f);
+            paint.setTextAlign(Paint.Align.CENTER);
+            paint.setLetterSpacing(0.04f);
+            canvas.drawText("tabii", cx, height * 0.64f, paint);
+            return out;
+        }
+
+        // 9. TOD
+        if (pkg.contains("tod") || label.contains("tod") || id.contains("tod")) {
+            Bitmap out = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(out);
+            applyCardClip(canvas, width, height);
+
+            paint.setShader(new LinearGradient(0, 0, width, height,
+                    new int[] { 0xFF2E1065, 0xFF1E1B4B, 0xFF0F172A }, null, Shader.TileMode.CLAMP));
+            canvas.drawRect(0, 0, width, height, paint);
+            paint.setShader(null);
+
+            float cx = width / 2f;
+            paint.setShader(new RadialGradient(cx, height * 0.50f, height * 0.50f,
+                    new int[] { 0x55C084FC, 0x15C084FC, 0x00000000 }, null, Shader.TileMode.CLAMP));
+            canvas.drawCircle(cx, height * 0.50f, height * 0.50f, paint);
+            paint.setShader(null);
+
+            paint.setColor(0xFFE879F9);
+            paint.setTypeface(Typeface.create("sans-serif-black", Typeface.BOLD));
+            paint.setTextSize(height * 0.42f);
+            paint.setTextAlign(Paint.Align.CENTER);
+            paint.setLetterSpacing(0.06f);
+            canvas.drawText("TOD", cx, height * 0.64f, paint);
+            return out;
+        }
+
+        // 10. Exxen
+        if (pkg.contains("exxen") || label.contains("exxen") || id.contains("exxen")) {
+            Bitmap out = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(out);
+            applyCardClip(canvas, width, height);
+
+            paint.setShader(new LinearGradient(0, 0, width, height,
+                    new int[] { 0xFF1C1917, 0xFF0C0A09, 0xFF000000 }, null, Shader.TileMode.CLAMP));
+            canvas.drawRect(0, 0, width, height, paint);
+            paint.setShader(null);
+
+            float cx = width / 2f;
+            paint.setShader(new RadialGradient(cx, height * 0.50f, height * 0.50f,
+                    new int[] { 0x44FACC15, 0x10FACC15, 0x00000000 }, null, Shader.TileMode.CLAMP));
+            canvas.drawCircle(cx, height * 0.50f, height * 0.50f, paint);
+            paint.setShader(null);
+
+            paint.setColor(0xFFFACC15);
+            paint.setTypeface(Typeface.create("sans-serif-black", Typeface.BOLD));
+            paint.setTextSize(height * 0.38f);
+            paint.setTextAlign(Paint.Align.CENTER);
+            paint.setLetterSpacing(0.08f);
+            canvas.drawText("EXXEN", cx, height * 0.64f, paint);
+            return out;
+        }
+
+        // 11. Prime Video
+        if (pkg.contains("amazonvideo") || label.contains("prime") || pkg.contains("primevideo")) {
+            Bitmap out = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(out);
+            applyCardClip(canvas, width, height);
+
+            paint.setShader(new LinearGradient(0, 0, width, height,
+                    new int[] { 0xFF0A192F, 0xFF020C1B, 0xFF01060D }, null, Shader.TileMode.CLAMP));
+            canvas.drawRect(0, 0, width, height, paint);
+            paint.setShader(null);
+
+            float cx = width / 2f;
+            paint.setColor(Color.WHITE);
+            paint.setTypeface(Typeface.create("sans-serif-black", Typeface.BOLD));
+            paint.setTextSize(height * 0.28f);
+            paint.setTextAlign(Paint.Align.CENTER);
+            paint.setLetterSpacing(0.02f);
+            canvas.drawText("prime video", cx, height * 0.56f, paint);
+
+            paint.setColor(0xFF00A8E1);
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(Math.max(2f, height * 0.038f));
+            paint.setStrokeCap(Paint.Cap.ROUND);
+            canvas.drawArc(new RectF(cx - width * 0.20f, height * 0.58f, cx + width * 0.20f, height * 0.78f),
+                    25, 130, false, paint);
+            return out;
+        }
+
+        // 12. Downloader
+        if (pkg.contains("downloader") || label.contains("downloader")) {
+            Bitmap out = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(out);
+            applyCardClip(canvas, width, height);
+
+            paint.setShader(new LinearGradient(0, 0, width, height,
+                    new int[] { 0xFFC2410C, 0xFF9A3412, 0xFF7C2D12 }, null, Shader.TileMode.CLAMP));
+            canvas.drawRect(0, 0, width, height, paint);
+            paint.setShader(null);
 
             paint.setTextSize(height * 0.22f);
             paint.setTypeface(Typeface.create("sans-serif-medium", Typeface.BOLD));
             float textW = paint.measureText("Downloader");
-            float badgeW = height * 0.36f;
-            float gap = width * 0.035f;
+            float badgeW = height * 0.38f;
+            float gap = width * 0.04f;
             float totalW = badgeW + gap + textW;
             float startX = (width - totalW) / 2f;
             float by = (height - badgeW) / 2f;
 
-            // 'D' container badge
             paint.setColor(0x33FFFFFF);
             paint.setStyle(Paint.Style.FILL);
             canvas.drawRoundRect(new RectF(startX, by, startX + badgeW, by + badgeW),
-                    badgeW * 0.24f, badgeW * 0.24f, paint);
+                    badgeW * 0.28f, badgeW * 0.28f, paint);
 
-            // 'D' letter
             paint.setColor(Color.WHITE);
             paint.setTypeface(Typeface.create("sans-serif-black", Typeface.BOLD));
-            paint.setTextSize(badgeW * 0.70f);
+            paint.setTextSize(badgeW * 0.72f);
             paint.setTextAlign(Paint.Align.CENTER);
-            canvas.drawText("D", startX + badgeW / 2f, by + badgeW * 0.74f, paint);
+            canvas.drawText("D", startX + badgeW / 2f, by + badgeW * 0.76f, paint);
 
-            // Text "Downloader"
             paint.setTypeface(Typeface.create("sans-serif-medium", Typeface.BOLD));
             paint.setTextSize(height * 0.22f);
             paint.setTextAlign(Paint.Align.LEFT);
@@ -481,23 +789,24 @@ public final class IconRepository {
             return out;
         }
 
+        // 13. Apple TV
         if (pkg.contains("apple") && (pkg.contains("tv") || label.contains("tv"))) {
-            // Apple TV: Deep dark card with Apple logo & tv centered
             Bitmap out = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(out);
+            applyCardClip(canvas, width, height);
 
-            float radius = height * 0.20f;
-            Path clip = new Path();
-            clip.addRoundRect(new RectF(0, 0, width, height), radius, radius, Path.Direction.CW);
-            canvas.clipPath(clip);
-            canvas.drawColor(0xFF18181B);
+            paint.setShader(new LinearGradient(0, 0, width, height,
+                    new int[] { 0xFF1C1917, 0xFF0C0A09, 0xFF000000 }, null, Shader.TileMode.CLAMP));
+            canvas.drawRect(0, 0, width, height, paint);
+            paint.setShader(null);
 
+            float cx = width / 2f;
             paint.setColor(Color.WHITE);
             paint.setStyle(Paint.Style.FILL);
             paint.setTypeface(Typeface.create("sans-serif-medium", Typeface.BOLD));
-            paint.setTextSize(height * 0.36f);
+            paint.setTextSize(height * 0.42f);
             paint.setTextAlign(Paint.Align.CENTER);
-            canvas.drawText("tv", width / 2f, height * 0.62f, paint);
+            canvas.drawText("tv", cx, height * 0.65f, paint);
             return out;
         }
 

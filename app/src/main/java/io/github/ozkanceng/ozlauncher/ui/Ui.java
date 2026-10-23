@@ -44,10 +44,8 @@ public final class Ui {
      * A cinematic TV card plate background matching modern Android TV reference interfaces.
      */
     public static Drawable tvIconPlate(Context context, ThemePalette palette, boolean focused) {
-        int top = focused ? blend(palette.surface, Color.WHITE, 0.22f)
-                : blend(palette.surface, Color.WHITE, 0.05f);
-        int bottom = focused ? blend(palette.surface, palette.background, 0.15f)
-                : blend(palette.surface, palette.background, 0.35f);
+        int top = focused ? 0xFF242C3D : 0xFF141926;
+        int bottom = focused ? 0xFF161B26 : 0xFF0B0E17;
 
         GradientDrawable base = new GradientDrawable(
                 GradientDrawable.Orientation.TOP_BOTTOM, new int[] { top, bottom });
