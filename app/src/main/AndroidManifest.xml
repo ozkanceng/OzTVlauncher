@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-feature
         android:name="android.software.leanback"
@@ -59,5 +63,15 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".mirror.MirroringHubActivity"
+            android:configChanges="keyboard|keyboardHidden|navigation|screenSize|uiMode|locale|layoutDirection|fontScale|density"
+            android:exported="true"
+            android:label="@string/screen_mirroring"
+            android:launchMode="singleTop"
+            android:resizeableActivity="true"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.OZLauncher" />
     </application>
 </manifest>

@@ -5,9 +5,9 @@ import android.content.pm.ResolveInfo;
 
 import java.util.Objects;
 
-/** Immutable description of an installed application or a hardware TV input. */
+/** Immutable description of an installed application, hardware TV input, or system action. */
 public final class LaunchItem {
-    public enum Kind { APP, TV_INPUT }
+    public enum Kind { APP, TV_INPUT, ACTION }
 
     public final String id;
     public final String label;
@@ -37,6 +37,11 @@ public final class LaunchItem {
     public static LaunchItem input(String label, String inputId) {
         return new LaunchItem("input:" + inputId, label, Kind.TV_INPUT, null,
                 null, inputId, null);
+    }
+
+    public static LaunchItem action(String id, String label) {
+        return new LaunchItem("action:" + id, label, Kind.ACTION, null,
+                null, null, null);
     }
 
     @Override public boolean equals(Object other) {

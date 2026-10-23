@@ -182,6 +182,8 @@ public final class LauncherActivity extends Activity {
         palette = ThemePalette.of(preferences.theme(), preferences.highContrast());
         root = new FrameLayout(this);
         root.setBackgroundColor(palette.background);
+        root.setClipChildren(false);
+        root.setClipToPadding(false);
         setContentView(root);
 
         wallpaperView = new ImageView(this);
@@ -236,17 +238,25 @@ public final class LauncherActivity extends Activity {
         root.addView(favoriteTitle, titleLp);
 
         favoriteGrid = new TvGridView(this);
-        FrameLayout.LayoutParams favoritesLp = new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, Ui.dp(this, 160), Gravity.BOTTOM);
-        favoritesLp.setMargins(Ui.dp(this, 54), 0, Ui.dp(this, 54), Ui.dp(this, 58));
-        root.addView(favoriteGrid, favoritesLp);
-
         favoriteEmpty = new TextView(this);
         favoriteEmpty.setText(R.string.favorite_empty);
         favoriteEmpty.setTextColor(0xCCFFFFFF);
         favoriteEmpty.setTextSize(17);
         favoriteEmpty.setGravity(Gravity.CENTER);
-        root.addView(favoriteEmpty, favoritesLp);
+
+        FrameLayout favoriteDock = new FrameLayout(this);
+        favoriteDock.setBackground(Ui.frostedDock(this, 26));
+        favoriteDock.setClipChildren(false);
+        favoriteDock.setClipToPadding(false);
+        int dockPadH = Ui.dp(this, 16);
+        int dockPadV = Ui.dp(this, 10);
+        favoriteDock.setPadding(dockPadH, dockPadV, dockPadH, dockPadV);
+        FrameLayout.LayoutParams favoritesLp = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, Ui.dp(this, 168), Gravity.BOTTOM);
+        favoritesLp.setMargins(Ui.dp(this, 50), 0, Ui.dp(this, 50), Ui.dp(this, 52));
+        favoriteDock.addView(favoriteGrid, match());
+        favoriteDock.addView(favoriteEmpty, match());
+        root.addView(favoriteDock, favoritesLp);
 
         TextView hint = new TextView(this);
         hint.setText(R.string.open_drawer_hint);
@@ -405,7 +415,13 @@ public final class LauncherActivity extends Activity {
     private void launch(LaunchItem item) {
         try {
             Intent intent;
-            if (item.kind == LaunchItem.Kind.TV_INPUT) {
+            if (item.kind == LaunchItem.Kind.ACTION) {
+                if ("action:mirror".equals(item.id)) {
+                    intent = new Intent(this, io.github.ozkanceng.ozlauncher.mirror.MirroringHubActivity.class);
+                } else {
+                    return;
+                }
+            } else if (item.kind == LaunchItem.Kind.TV_INPUT) {
                 intent = new Intent(Intent.ACTION_VIEW, TvContract.buildChannelUriForPassthroughInput(item.inputId));
             } else {
                 intent = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)

@@ -21,4 +21,12 @@
     <string name="icon_saved">Özel ikon kaydedildi</string><string name="icon_failed">Bu görsel okunamadı</string><string name="wallpaper_saved">Duvar kâğıdı uygulandı</string><string name="wallpaper_failed">Bu duvar kâğıdı okunamadı</string>
     <string name="date_time_format">%1$s  ·  %2$s</string>
     <string name="tv_input">TV girişi</string>
+    <string name="screen_mirroring">Ekran Yansıtma</string>
+    <string name="mirror_ready">Bağlantıya Hazır</string>
+    <string name="mirror_device_name">Cihaz Adı</string>
+    <string name="mirror_wifi_ip">Wi-Fi / IP Adresi</string>
+    <string name="mirror_guide_apple">iPhone / iPad / Mac</string>
+    <string name="mirror_guide_apple_desc">Denetim Merkezini açın → Ekran Yansıtma simgesine dokunun → %1$s seçin</string>
+    <string name="mirror_guide_android">Android / PC</string>
+    <string name="mirror_guide_android_desc">Hızlı Ayarlar panelinden Yayınla veya Smart View seçin → %1$s seçin</string>
 </resources>

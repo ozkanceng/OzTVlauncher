@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -44,7 +45,7 @@ public final class AppTileView extends LinearLayout {
             }
         });
         iconPlate.setClipToOutline(true);
-        addView(iconPlate, new LayoutParams(Ui.dp(context, 142), Ui.dp(context, 86)));
+        addView(iconPlate, new LayoutParams(Ui.dp(context, 150), Ui.dp(context, 88)));
 
         icon = new ImageView(context);
         icon.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -57,12 +58,13 @@ public final class AppTileView extends LinearLayout {
         label.setGravity(Gravity.CENTER);
         label.setTextColor(Color.WHITE);
         label.setTextSize(15);
-        label.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL));
+        label.setTypeface(Typeface.create("sans-serif-medium", Typeface.BOLD));
         label.setLetterSpacing(0.005f);
         label.setSingleLine(true);
         label.setEllipsize(android.text.TextUtils.TruncateAt.END);
+        label.setAlpha(0.0f);
         LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        lp.topMargin = Ui.dp(context, 9);
+        lp.topMargin = Ui.dp(context, 8);
         addView(label, lp);
 
         setOnFocusChangeListener((view, focused) -> updateFocus(focused));
@@ -72,7 +74,6 @@ public final class AppTileView extends LinearLayout {
         this.palette = palette;
         this.radiusDp = radiusDp;
         this.reducedMotion = reducedMotion;
-        label.setTextColor(palette.text);
         updateFocus(isFocused());
     }
 
@@ -99,22 +100,36 @@ public final class AppTileView extends LinearLayout {
         if (palette == null) return;
         setBackground(Ui.tileBackground(getContext(), palette, radiusDp, focused));
         iconPlate.setBackground(Ui.tvIconPlate(getContext(), palette, focused));
-        label.setTextColor(palette.text);
-        label.setAlpha(focused ? 1f : 0.78f);
-        label.setTypeface(Typeface.create("sans-serif-medium",
-                focused ? Typeface.NORMAL : Typeface.NORMAL));
-        float plateScale = focused && !reducedMotion ? 1.09f : 1f;
-        float tileScale = focused && !reducedMotion ? 1.025f : 1f;
+        label.setTextColor(Color.WHITE);
+
+        if (focused) {
+            bringToFront();
+            if (getParent() instanceof ViewGroup) {
+                ((ViewGroup) getParent()).invalidate();
+            }
+        }
+
+        float tileScale = focused && !reducedMotion ? 1.14f : 1f;
+        float plateScale = focused && !reducedMotion ? 1.05f : 1f;
+
         if (reducedMotion) {
             setScaleX(tileScale);
             setScaleY(tileScale);
             iconPlate.setScaleX(plateScale);
             iconPlate.setScaleY(plateScale);
+            label.setAlpha(focused ? 1.0f : 0.0f);
         } else {
-            animate().scaleX(tileScale).scaleY(tileScale).setDuration(150).start();
-            iconPlate.animate().scaleX(plateScale).scaleY(plateScale).setDuration(150).start();
+            animate().scaleX(tileScale).scaleY(tileScale)
+                    .setDuration(170)
+                    .setInterpolator(new android.view.animation.OvershootInterpolator(1.1f))
+                    .start();
+            iconPlate.animate().scaleX(plateScale).scaleY(plateScale)
+                    .setDuration(170)
+                    .start();
+            label.animate().alpha(focused ? 1.0f : 0.0f).setDuration(150).start();
         }
-        iconPlate.setElevation(focused ? Ui.dp(getContext(), 18) : Ui.dp(getContext(), 2));
-        setElevation(focused ? Ui.dp(getContext(), 12) : 0);
+
+        iconPlate.setElevation(focused ? Ui.dp(getContext(), 24) : Ui.dp(getContext(), 2));
+        setElevation(focused ? Ui.dp(getContext(), 20) : 0);
     }
 }

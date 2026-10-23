@@ -48,6 +48,14 @@
     <string name="not_assigned">Not assigned</string>
     <string name="cannot_open">Cannot open this item</string>
     <string name="open_drawer_hint">Press Down for all apps</string>
+    <string name="screen_mirroring">Screen Mirroring</string>
+    <string name="mirror_ready">Ready to Connect</string>
+    <string name="mirror_device_name">Device Name</string>
+    <string name="mirror_wifi_ip">Wi-Fi / IP Address</string>
+    <string name="mirror_guide_apple">iPhone / iPad / Mac</string>
+    <string name="mirror_guide_apple_desc">Open Control Center → tap Screen Mirroring → select %1$s</string>
+    <string name="mirror_guide_android">Android / PC</string>
+    <string name="mirror_guide_android_desc">Pull down Quick Settings → tap Cast or Smart View → select %1$s</string>
     <string name="version_label">Version %1$s</string>
     <string name="privacy_summary">No ads, no tracking, no network permission.</string>
     <string name="license_summary">Free and open source under Apache License 2.0.</string>

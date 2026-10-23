@@ -38,6 +38,7 @@ public final class CatalogLoader {
         Collator collator = Collator.getInstance(Locale.getDefault());
         collator.setStrength(Collator.PRIMARY);
         result.sort(Comparator.comparing(item -> item.label, collator));
+        result.add(0, LaunchItem.action("mirror", context.getString(io.github.ozkanceng.ozlauncher.R.string.screen_mirroring)));
         return result;
     }
 
