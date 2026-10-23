@@ -69,9 +69,13 @@
             android:configChanges="keyboard|keyboardHidden|navigation|screenSize|uiMode|locale|layoutDirection|fontScale|density"
             android:exported="true"
             android:label="@string/screen_mirroring"
-            android:launchMode="singleTop"
             android:resizeableActivity="true"
             android:screenOrientation="landscape"
-            android:theme="@style/Theme.OZLauncher" />
+            android:theme="@style/Theme.OZLauncher">
+            <intent-filter>
+                <action android:name="io.github.ozkanceng.ozlauncher.action.SCREEN_MIRRORING" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 </manifest>

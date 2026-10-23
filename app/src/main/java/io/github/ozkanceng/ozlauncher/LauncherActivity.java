@@ -392,6 +392,11 @@ public final class LauncherActivity extends Activity {
             preferences.initializeFavorites(defaults);
         }
         visibleItems = CatalogState.visible(allItems, preferences.hidden());
+        List<String> favIds = new ArrayList<>(preferences.favorites());
+        if (!favIds.contains("action:mirror")) {
+            favIds.add(0, "action:mirror");
+            preferences.setFavorites(favIds);
+        }
         List<LaunchItem> favorites = CatalogState.favorites(visibleItems, preferences.favorites());
         favoriteGrid.setItems(favorites);
         favoriteGrid.setVisibility(favorites.isEmpty() ? View.INVISIBLE : View.VISIBLE);
@@ -433,14 +438,16 @@ public final class LauncherActivity extends Activity {
 
     private void launch(LaunchItem item) {
         try {
-            Intent intent;
             if (item.kind == LaunchItem.Kind.ACTION) {
                 if ("action:mirror".equals(item.id)) {
-                    intent = new Intent(this, io.github.ozkanceng.ozlauncher.mirror.MirroringHubActivity.class);
-                } else {
-                    return;
+                    Intent intent = new Intent(this, io.github.ozkanceng.ozlauncher.mirror.MirroringHubActivity.class);
+                    startActivity(intent);
+                    if (preferences.reducedMotion()) overridePendingTransition(0, 0);
                 }
-            } else if (item.kind == LaunchItem.Kind.TV_INPUT) {
+                return;
+            }
+            Intent intent;
+            if (item.kind == LaunchItem.Kind.TV_INPUT) {
                 intent = new Intent(Intent.ACTION_VIEW, TvContract.buildChannelUriForPassthroughInput(item.inputId));
             } else {
                 intent = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)

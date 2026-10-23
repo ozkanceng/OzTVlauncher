@@ -12,8 +12,8 @@ android {
         applicationId = "io.github.ozkanceng.ozlauncher"
         minSdk = 26
         targetSdk = 36
-        versionCode = 7
-        versionName = "1.1.3"
+        versionCode = 8
+        versionName = "1.1.4"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -24,8 +24,7 @@ android {
 
     buildTypes {
         debug {
-            applicationIdSuffix = ".debug"
-            versionNameSuffix = "-debug"
+            // Keep unified package name with release for TV launcher updates
         }
         release {
             isMinifyEnabled = true
